@@ -1,23 +1,16 @@
-type Props = {
-  user_initial: string;
-  name: string;
-  email: string;
-  status: string;
-  date_of_birth: string;
-};
+import { Initial } from "../../atoms/initial/Initial";
+import { CardProps } from "./Card.types";
 
 export const Card = ({
-  user_initial,
+  initial,
   name,
   email,
   status,
   date_of_birth,
-}: Props) => {
+}: CardProps) => {
   return (
     <div className="card-container">
-      <div className="init-container">
-        <h1 className="card-init">{user_initial}</h1>
-      </div>
+      <Initial text={initial} />
       <h1 className="card-username">{name}</h1>
       <p className="card-info">Email: {email}</p>
       <p className="card-info">Status: {status}</p>
