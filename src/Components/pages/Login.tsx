@@ -34,31 +34,27 @@ const Login: React.FC = () => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          body: {
-            email,
-            password,
-          },
+          email,
+          password,
         }),
       });
 
       const data = await response.json();
 
-      if (response.status === 200) {
-        if (email === "academy@gmail.com" && password === "academy123") {
-          console.log("Login response Data : ", data);
-          setAuth(data.result.data.accessToken, data.result.data.expiresIn);
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 100);
-        } else {
-          setError("Your credentials are invalid");
-        }
+      console.log("login response:", data);
+
+      const token = data?.result?.data?.accessToken;
+      const expiresIn = data?.result?.data?.expiresIn;
+
+      if (response.status === 200 && token) {
+        setAuth(token, expiresIn);
+        navigate("/dashboard");
       } else {
         setError(data.message || "Your credentials are invalid");
       }
     } catch (err) {
-      console.log(err);
-      setError("Please wait, An Error has occured");
+      console.error(err);
+      setError("Please wait, an error has occurred");
     } finally {
       setLoading(false);
     }
