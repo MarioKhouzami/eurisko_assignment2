@@ -41,7 +41,7 @@ const Login: React.FC = () => {
 
       const data = await response.json();
 
-      console.log("login response:", data);
+      // console.log("login response:", data);
 
       const token = data?.result?.data?.accessToken;
       const expiresIn = data?.result?.data?.expiresIn;
