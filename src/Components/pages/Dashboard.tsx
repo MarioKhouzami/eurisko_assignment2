@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "../../store/authStore";
 import { Card } from "../molecules/Card/card";
@@ -6,6 +6,7 @@ import SearchInput from "../molecules/SearchInput/SearchInput";
 import CardsContainer from "../organisms/CardsContainer/CardsContainer";
 import NavBar from "../organisms/NavBar/NavBar";
 import Loading from "../organisms/Loading/Loading";
+import { useLocation, useNavigate } from "react-router";
 
 type User = {
   id: string;
@@ -15,10 +16,29 @@ type User = {
   dateOfBirth: string;
   status: string;
 };
+const useDebounce = (value: string, delay: number) => {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timeout);
+  }, [value, delay]);
+  return debounced;
+};
 
 const Dashboard = () => {
-  const [search, setSearch] = useState("");
   const accessToken = useAuthStore((state) => state.accessToken);
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 400);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const query = searchParams.get("q");
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [location.search]);
 
   const {
     data: users = [],
@@ -26,10 +46,10 @@ const Dashboard = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["users", search],
+    queryKey: ["users", debouncedSearch, accessToken],
     queryFn: async () => {
-      const url = search
-        ? `/api/users?search=${encodeURIComponent(search)}`
+      const url = debouncedSearch
+        ? `/api/users?search=${encodeURIComponent(debouncedSearch)}`
         : "/api/users";
 
       const response = await fetch(url, {
@@ -52,7 +72,12 @@ const Dashboard = () => {
   });
 
   const handleSearch = (query: string) => {
-    setSearch(query);
+    setSearchQuery(query);
+    if (query.trim() === "") {
+      navigate("/dashboard", { replace: true });
+    } else {
+      navigate(`/dashboard?q=${encodeURIComponent(query)}`, { replace: true });
+    }
   };
 
   return (
