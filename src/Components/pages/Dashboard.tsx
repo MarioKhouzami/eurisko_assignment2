@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "../../store/authStore";
 import { Card } from "../molecules/Card/card";
 import SearchInput from "../molecules/SearchInput/SearchInput";
@@ -14,18 +15,21 @@ type User = {
   dateOfBirth: string;
   status: string;
 };
+
 const Dashboard = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
   const accessToken = useAuthStore((state) => state.accessToken);
 
-  const fetchUsers = async (query = "") => {
-    try {
-      setLoading(true);
-      setError(""); // Clear previous error
-      const url = query
-        ? `/api/users?search=${encodeURIComponent(query)}`
+  const {
+    data: users = [],
+    isLoading: loading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["users", search],
+    queryFn: async () => {
+      const url = search
+        ? `/api/users?search=${encodeURIComponent(search)}`
         : "/api/users";
 
       const response = await fetch(url, {
@@ -36,48 +40,39 @@ const Dashboard = () => {
         },
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.message || "Failed to fetch users");
       }
 
-      const data = await response.json();
-      setUsers(data.result.data.users); // Set users data
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message || "An unknown error occurred");
-      setUsers([]); // Clear users in case of error
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (accessToken) {
-      fetchUsers();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken]);
+      return data.result.data.users;
+    },
+    enabled: !!accessToken,
+  });
 
   const handleSearch = (query: string) => {
-    if (accessToken) {
-      fetchUsers(query);
-    }
+    setSearch(query);
   };
+
   return (
     <div className="min-h-screen dark:bg-primary-dark">
       <NavBar />
       <SearchInput onSearch={handleSearch} />
+
       {loading && <Loading />}
-      {!loading && users.length === 0 && !error && (
+
+      {!loading && isError && (
+        <p className="error-msg">{(error as Error).message}</p>
+      )}
+
+      {!loading && !isError && users.length === 0 && (
         <p className="user-nf">User Not Found</p>
       )}
 
-      {error && <p className="error-msg">{error}</p>}
-
-      {!loading && !error && users.length > 0 && (
+      {!loading && !isError && users.length > 0 && (
         <CardsContainer>
-          {users.map((user) => (
+          {users.map((user: User) => (
             <Card
               key={user.id}
               email={user.email}
@@ -96,4 +91,5 @@ const Dashboard = () => {
     </div>
   );
 };
+
 export default Dashboard;

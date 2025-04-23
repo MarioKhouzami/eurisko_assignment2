@@ -5,6 +5,7 @@ import Dashboard from "./Components/pages/Dashboard";
 import PageNotFound from "./Components/pages/PageNotFound";
 import { useRef, useEffect } from "react";
 import { useThemeStore } from "./store/themeStore";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -20,18 +21,23 @@ function App() {
       }
     }
   }, [theme]);
+
+  const queryClient = new QueryClient();
+
   return (
     <div className="dark:bg-primary-dark">
-      <Router>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
-          <Route path="/*" element={<PageNotFound />} />
-        </Routes>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+            <Route path="/*" element={<PageNotFound />} />
+          </Routes>
+        </Router>
+      </QueryClientProvider>
     </div>
   );
 }
