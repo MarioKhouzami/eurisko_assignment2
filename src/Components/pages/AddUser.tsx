@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "../../store/authStore";
 import NavBar from "../organisms/NavBar/NavBar";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
@@ -20,6 +20,7 @@ const userSchema = z.object({
 type UserFormData = z.infer<typeof userSchema>;
 
 const AddUser = () => {
+  const queryClient = useQueryClient();
   const token = useAuthStore((state) => state.accessToken);
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ const AddUser = () => {
       status: "active",
     },
   });
+
   const mutation = useMutation({
     mutationFn: async (user: UserFormData) => {
       const response = await fetch("/api/users", {
@@ -58,12 +60,17 @@ const AddUser = () => {
     },
     onSuccess: () => {
       toast.success("User created successfully");
+      // ✅ Refresh the users list
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
       navigate("/dashboard");
     },
     onError: (err: unknown) => {
       toast.error((err as Error).message || "Something went wrong");
     },
   });
+
   const onSubmit = (data: UserFormData) => {
     console.log("Submitting:", data);
     // TODO: trigger mutation

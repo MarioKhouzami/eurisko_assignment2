@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router";
 import { Initial } from "../../atoms/initial/Initial";
+import EditUser from "../../pages/EditUser";
 import { CardProps } from "./Card.types";
 
 export const Card = ({
@@ -8,6 +10,7 @@ export const Card = ({
   status,
   date_of_birth,
 }: CardProps) => {
+  const navigate = useNavigate();
   return (
     <div className="card-container">
       <Initial text={initial} />
@@ -16,7 +19,14 @@ export const Card = ({
       <p className="card-info">Status: {status}</p>
       <p className="card-info">Date Of Birth: {date_of_birth}</p>
       <div className="buttons-cont">
-        <button className="edit-btn">Edit</button>
+        <button
+          className="edit-btn"
+          onClick={() => {
+            navigate("/dashboard/edit/:id");
+          }}
+        >
+          Edit
+        </button>
         <button className="delete-btn">Delete</button>
       </div>
     </div>
