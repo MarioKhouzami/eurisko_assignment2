@@ -1,8 +1,11 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 import NavBar from "../organisms/NavBar/NavBar";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const userSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -17,7 +20,8 @@ const userSchema = z.object({
 type UserFormData = z.infer<typeof userSchema>;
 
 const AddUser = () => {
-  //   const token = useAuthStore((state) => state.accessToken);
+  const token = useAuthStore((state) => state.accessToken);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -33,10 +37,37 @@ const AddUser = () => {
       status: "active",
     },
   });
+  const mutation = useMutation({
+    mutationFn: async (user: UserFormData) => {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(user),
+      });
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to add user");
+      }
+
+      return data;
+    },
+    onSuccess: () => {
+      toast.success("User created successfully");
+      navigate("/dashboard");
+    },
+    onError: (err: unknown) => {
+      toast.error((err as Error).message || "Something went wrong");
+    },
+  });
   const onSubmit = (data: UserFormData) => {
     console.log("Submitting:", data);
     // TODO: trigger mutation
+    mutation.mutate(data);
   };
 
   return (
