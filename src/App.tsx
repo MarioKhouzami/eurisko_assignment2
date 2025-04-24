@@ -6,6 +6,7 @@ import PageNotFound from "./Components/pages/PageNotFound";
 import { useRef, useEffect } from "react";
 import { useThemeStore } from "./store/themeStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AddUser from "./Components/pages/AddUser";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -33,6 +34,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/new" element={<AddUser />} />
             </Route>
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
