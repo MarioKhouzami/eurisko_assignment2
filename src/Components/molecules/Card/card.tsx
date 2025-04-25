@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router";
 import { Initial } from "../../atoms/initial/Initial";
-import EditUser from "../../pages/EditUser";
+// import EditUser from "../../pages/EditUser";
 import { CardProps } from "./Card.types";
 
 export const Card = ({
+  id,
   initial,
   name,
   email,
@@ -21,9 +22,7 @@ export const Card = ({
       <div className="buttons-cont">
         <button
           className="edit-btn"
-          onClick={() => {
-            navigate("/dashboard/edit/:id");
-          }}
+          onClick={() => navigate(`/dashboard/edit/${id}`)} // ✅ now using the id directly
         >
           Edit
         </button>

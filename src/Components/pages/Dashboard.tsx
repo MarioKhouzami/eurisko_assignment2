@@ -61,7 +61,7 @@ const Dashboard = () => {
       });
 
       const data = await response.json();
-
+      console.log("📦 Raw user API response:", data); // ✅ Add this log
       if (!response.ok) {
         throw new Error(data.message || "Failed to fetch users");
       }
@@ -101,6 +101,7 @@ const Dashboard = () => {
           {users.map((user: User) => (
             <Card
               key={user.id}
+              id={user.id}
               email={user.email}
               name={`${user.firstName} ${
                 user.lastName ? " " + user.lastName : ""
