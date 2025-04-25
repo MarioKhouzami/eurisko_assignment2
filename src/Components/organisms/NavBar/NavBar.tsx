@@ -9,8 +9,9 @@ const NavBar = () => {
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
-  const isAddUserPage = location.pathname === "/dashboard/new";
-
+  const isCreateOrEditPage =
+    location.pathname.includes("/dashboard/new") ||
+    location.pathname.includes("/dashboard/edit");
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -20,7 +21,7 @@ const NavBar = () => {
     <div className="main-navbar">
       <h1 className="nav-header">User Management</h1>
       <div className="nav-buttons-container">
-        {isAddUserPage && (
+        {isCreateOrEditPage && (
           <button
             onClick={() => navigate("/dashboard")}
             className="create-user-btn flex items-center gap-2"
@@ -29,15 +30,20 @@ const NavBar = () => {
             Back to Dashboard
           </button>
         )}
-        <button
-          className="create-user-btn"
-          onClick={() => navigate("/dashboard/new")}
-        >
-          Create User
-        </button>
-        <button className="logout-user-btn" onClick={handleLogout}>
-          Logout
-        </button>
+        {!isCreateOrEditPage && (
+          <button
+            className="create-user-btn"
+            onClick={() => navigate("/dashboard/new")}
+          >
+            Create User
+          </button>
+        )}
+        {!isCreateOrEditPage && (
+          <button className="logout-user-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
+
         <button
           onClick={toggleTheme}
           className="moonicon-btn"

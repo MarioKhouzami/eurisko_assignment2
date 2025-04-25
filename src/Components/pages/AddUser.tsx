@@ -142,7 +142,7 @@ const AddUser = () => {
             <select {...register("status")} className="form-input">
               <option value="">Select status</option>
               <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="locked">Locked</option>
             </select>
             {errors.status && (
               <p className="text-red-500 text-sm">{errors.status.message}</p>
