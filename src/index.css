@@ -163,3 +163,24 @@
 .loading-page {
   @apply min-h-screen dark:bg-primary-dark flex items-center justify-center;
 }
+
+/* {Confirmation modal} */
+
+.confirmation-modal {
+  @apply fixed inset-0  backdrop-blur-lg flex justify-center items-center z-50;
+}
+.inner-confirmation {
+  @apply bg-white dark:bg-primary-dark text-black dark:text-white p-6 rounded-lg shadow-xl w-full max-w-md;
+}
+.modal-header {
+  @apply text-lg font-medium;
+}
+.confirmation-btns {
+  @apply mt-6 flex justify-end gap-4;
+}
+.modal-cancel-btn {
+  @apply px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 dark:bg-primary-super-dark dark:hover:bg-primary-dark;
+}
+.modal-delete-btn {
+  @apply px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700;
+}
