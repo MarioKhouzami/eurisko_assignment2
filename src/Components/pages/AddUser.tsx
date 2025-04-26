@@ -73,7 +73,6 @@ const AddUser = () => {
 
   const onSubmit = (data: UserFormData) => {
     console.log("Submitting:", data);
-    // TODO: trigger mutation
     mutation.mutate(data);
   };
 
@@ -93,7 +92,7 @@ const AddUser = () => {
               placeholder="e.g. John"
             />
             {errors.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName.message}</p>
+              <p className="error-msg-edit">{errors.firstName.message}</p>
             )}
           </div>
 
@@ -117,7 +116,7 @@ const AddUser = () => {
               placeholder="e.g. john@example.com"
             />
             {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
+              <p className="error-msg-edit">{errors.email.message}</p>
             )}
           </div>
 
@@ -130,9 +129,7 @@ const AddUser = () => {
               className="form-input"
             />
             {errors.dateOfBirth && (
-              <p className="text-red-500 text-sm">
-                {errors.dateOfBirth.message}
-              </p>
+              <p className="error-msg-edit">{errors.dateOfBirth.message}</p>
             )}
           </div>
 
@@ -145,7 +142,7 @@ const AddUser = () => {
               <option value="locked">Locked</option>
             </select>
             {errors.status && (
-              <p className="text-red-500 text-sm">{errors.status.message}</p>
+              <p className="error-msg-edit">{errors.status.message}</p>
             )}
           </div>
 

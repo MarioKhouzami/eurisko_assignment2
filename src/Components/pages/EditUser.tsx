@@ -134,7 +134,7 @@ const EditUser = () => {
             <label className="input-header">First Name *</label>
             <input {...register("firstName")} className="form-input" />
             {errors.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName.message}</p>
+              <p className="error-msg-edit">{errors.firstName.message}</p>
             )}
           </div>
 
@@ -147,7 +147,7 @@ const EditUser = () => {
             <label className="input-header">Email *</label>
             <input type="email" {...register("email")} className="form-input" />
             {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
+              <p className="error-msg-edit">{errors.email.message}</p>
             )}
           </div>
 
@@ -159,9 +159,7 @@ const EditUser = () => {
               className="form-input"
             />
             {errors.dateOfBirth && (
-              <p className="text-red-500 text-sm">
-                {errors.dateOfBirth.message}
-              </p>
+              <p className="error-msg-edit">{errors.dateOfBirth.message}</p>
             )}
           </div>
 
@@ -172,7 +170,7 @@ const EditUser = () => {
               <option value="locked">Locked</option>
             </select>
             {errors.status && (
-              <p className="text-red-500 text-sm">{errors.status.message}</p>
+              <p className="error-msg-edit">{errors.status.message}</p>
             )}
           </div>
 

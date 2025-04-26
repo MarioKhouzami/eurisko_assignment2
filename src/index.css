@@ -163,7 +163,9 @@
 .loading-page {
   @apply min-h-screen dark:bg-primary-dark flex items-center justify-center;
 }
-
+.error-msg-edit {
+  @apply text-red-500 text-sm;
+}
 /* {Confirmation modal} */
 
 .confirmation-modal {
