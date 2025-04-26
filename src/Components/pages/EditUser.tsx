@@ -112,9 +112,14 @@ const EditUser = () => {
 
   if (isError) {
     return (
-      <p className="text-center text-red-600">
-        Failed to load user: {(error as Error).message}
-      </p>
+      <div className="min-h-screen dark:bg-primary-dark">
+        <NavBar />
+        <div className="outter-form">
+          <p className="text-center text-red-600 font-bold mt-10">
+            Failed to load user: {(error as Error).message}
+          </p>
+        </div>
+      </div>
     );
   }
 
